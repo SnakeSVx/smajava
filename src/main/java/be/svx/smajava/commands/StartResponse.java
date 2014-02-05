@@ -29,12 +29,6 @@ public class StartResponse implements Response, RequiresInverter {
     @Override
     public void processData(byte[] bytes) throws FaultyResponseException {
 
-        System.out.println(Arrays.toString(bytes));
-
-        for(int i = 0; i < bytes.length; i++){
-            System.out.println("Hex id " + i + " = " + Integer.toHexString(bytes[i]));
-        }
-
          System.out.println("7E: " + (0x7E == bytes[0]));
          System.out.println("1F: " + (0x1F == bytes[1]));
          System.out.println("00: " + (0x00 == bytes[2]));
@@ -46,7 +40,7 @@ public class StartResponse implements Response, RequiresInverter {
          }
          System.out.println("End Process adress");
 
-         int base = 4 + ADDR.length;
+         int base = 3 + ADDR.length;
          System.out.println("00: " + (0x00 == bytes[base + 1]));
          System.out.println("00: " + (0x00 == bytes[base + 2]));
          System.out.println("00: " + (0x00 == bytes[base + 3]));
@@ -59,6 +53,12 @@ public class StartResponse implements Response, RequiresInverter {
          System.out.println("04: " + (0x04 == bytes[base + 10]));
          System.out.println("70: " + (0x70 == bytes[base + 11]));
          System.out.println("00: " + (0x00 == bytes[base + 12]));
+
+         if(bytes.length > base + 12){
+             for(int i = base + 13; i < bytes.length; i++){
+                 System.out.println("EXTRA: " + Integer.toHexString(bytes[i]));
+             }
+         }
 
 
     }
