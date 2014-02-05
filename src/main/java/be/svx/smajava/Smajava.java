@@ -4,12 +4,11 @@ import be.geek.smajava.Configuration;
 import be.geek.smajava.Inverter;
 import be.geek.smajava.Log;
 import be.geek.smajava.SmajavaException;
-import be.svx.smajava.commands.StartRequest;
+import be.svx.smajava.engine.Engine;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -59,18 +58,16 @@ public class Smajava {
             }
         }
 
-        Inverter inverter = new Inverter("5000TL", inverterAddress);
+        Inverter inverter = new Inverter("5000TL21", inverterAddress);
         inverter.setPassword("0000");
 
         Engine engine = new Engine(inverter);
-
-        inverter.openConnection();
         try {
-            Response response = engine.processRequest(new StartRequest());
+            engine.open();
         } catch (SmajavaException e) {
             e.printStackTrace();
         } finally {
-            inverter.closeConnection();
+            engine.close();
         }
 
 
