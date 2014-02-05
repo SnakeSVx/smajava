@@ -59,6 +59,13 @@ public class InvertersData {
             invertercode[3] = 0x39;
             //conf->ArchiveCode     = 0x4e;
         }
+        if (code.equals("5000TL21")) {
+            invertercode[0] = (byte) 0xd6;
+            invertercode[1] = (byte) 0xb1;
+            invertercode[2] = (byte) 0x70;
+            invertercode[3] = 0x39;
+            //conf->ArchiveCode     = 0x8a;
+        }
         if (code.equals("7000")) {
             invertercode[0] = (byte) 0xcf;
             invertercode[1] = (byte) 0x84;

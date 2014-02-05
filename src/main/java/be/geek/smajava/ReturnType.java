@@ -68,7 +68,7 @@ public class ReturnType {
     public static Collection<ReturnType> load() throws IOException {
         Collection<ReturnType> result = new ArrayList<ReturnType>();
         
-        InputStream inputStream = ReturnType.class.getResourceAsStream("/sma.in.new");
+        InputStream inputStream = ReturnType.class.getResourceAsStream("/be/geek/smajava/sma.in.new");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         
         String line = null;

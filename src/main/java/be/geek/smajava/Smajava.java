@@ -5,17 +5,10 @@
 package be.geek.smajava;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  *
@@ -66,8 +59,8 @@ public class Smajava {
             }            
         }
         
-        Configuration.setDataFilename("/sma.in.new");
-        Inverter inverter = new Inverter("3000TLHF", inverterAddress);
+        Configuration.setDataFilename("/be/geek/smajava/sma.in.new");
+        Inverter inverter = new Inverter("5000TL21", inverterAddress);
         inverter.setPassword("0000");
         Configuration.setInverter(inverter);        
         

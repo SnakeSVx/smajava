@@ -1,10 +1,8 @@
 package be.geek.smajava;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -12,8 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 
@@ -56,6 +52,8 @@ public class Inverter {
      * extracted serial
      */
     private byte[] serial;
+
+    private StreamConnection connection;
     
 
     public Inverter(String code, String address) {
@@ -117,7 +115,7 @@ public class Inverter {
     }
 
     public void openConnection() throws IOException {
-        StreamConnection connection = (StreamConnection) Connector.open(getConnectionURL());                
+        connection = (StreamConnection) Connector.open(getConnectionURL());
         inputStream = connection.openInputStream();
         outputStream = connection.openOutputStream();
     }
@@ -125,8 +123,10 @@ public class Inverter {
     public void closeConnection() throws IOException {
         this.inputStream.close();
         this.outputStream.close();
+        connection.close();
         inputStream = null;
         outputStream = null;
+        connection = null;
     }
     
     public void send(byte[] data) throws IOException {
