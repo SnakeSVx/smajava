@@ -5,6 +5,6 @@ package be.svx.smajava.engine;
  */
 public enum RequestType {
 
-    INIT,
-    INIT2
+    INIT_STEP1,
+    INIT_STEP2
 }

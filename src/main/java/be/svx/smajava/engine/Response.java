@@ -13,7 +13,7 @@ public abstract class Response {
 
     public abstract ResponseType getResponseType();
 
-    public abstract void processData(byte[] bytes) throws FaultyResponseException;
+    public abstract void processData(Packet packet) throws FaultyResponseException;
 
     public Engine getEngine() {
         return engine;

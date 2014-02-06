@@ -5,6 +5,7 @@ import be.geek.smajava.Inverter;
 import be.geek.smajava.Log;
 import be.geek.smajava.SmajavaException;
 import be.svx.smajava.engine.Engine;
+import be.svx.smajava.engine.FaultyResponseException;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -65,6 +66,8 @@ public class Smajava {
         try {
             engine.open();
         } catch (SmajavaException e) {
+            e.printStackTrace();
+        } catch (FaultyResponseException e) {
             e.printStackTrace();
         } finally {
             engine.close();

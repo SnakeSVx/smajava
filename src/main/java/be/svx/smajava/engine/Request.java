@@ -15,7 +15,7 @@ public abstract class Request {
 
     public abstract ResponseType getResponseType();
 
-    public abstract byte[] dataToSend();
+    public abstract Packet dataToSend();
 
     public Engine getEngine() {
         return engine;

@@ -1,10 +1,9 @@
 package be.svx.smajava.commands;
 
-import be.svx.smajava.engine.Engine;
-import be.svx.smajava.engine.FaultyResponseException;
-import be.svx.smajava.engine.Response;
-import be.svx.smajava.engine.ResponseType;
+import be.geek.smajava.Log;
+import be.svx.smajava.engine.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
 /**
@@ -24,36 +23,14 @@ public class InitResponse2 extends Response {
 
     @Override
     public ResponseType getResponseType() {
-        return ResponseType.INIT;
+        return ResponseType.INIT_STEP1;
     }
 
     private byte[] generateVerifictionBytes(){
-        byte[] ADDR = getEngine().getAddress();
-        byte[] bytes = new byte[4 + ADDR.length + 8 + ADDR.length];
-        bytes[0] = 0x7e;
-        bytes[1] = 0x22;
-        bytes[2] = 0x00;
-        bytes[3] = 0x5c;
-        for(int i = 0; i < ADDR.length; i++){
-            bytes[i+4] = ADDR[i];
-        }
-        int base = 3 + ADDR.length;
-        bytes[base + 1] = 0x00;
-        bytes[base + 2] = 0x00;
-        bytes[base + 3] = 0x00;
-        bytes[base + 4] = 0x00;
-        bytes[base + 5] = 0x00;
-        bytes[base + 6] = 0x00;
-        bytes[base + 7] = 0x05;
-        bytes[base + 8] = 0x00;
-        base = base + 9 ;
-        for(int i = 0; i < ADDR.length; i++){
-            bytes[i+base] = ADDR[i];
-        }
-        return bytes;
+       return getEngine().getAddress();
     }
 
-    private int verifyStartOfRequest(byte[] bytes) throws FaultyResponseException {
+    private int verifyRequestContent(byte[] bytes) throws FaultyResponseException {
         byte[] verification = generateVerifictionBytes();
         for(int i = 0; i < verification.length ; i++){
             if(verification[i] != bytes[i]){
@@ -63,22 +40,42 @@ public class InitResponse2 extends Response {
         return verification.length;
     }
 
+    /**
+     *
+     * R 7E 22 00 5C $ADDR 00 00 00 00 00 00 05 00 $ADDR $END;
+     * E $ADD2 $END;
+     *
+     * @param packet
+     * @throws FaultyResponseException
+     */
     @Override
-    public void processData(byte[] bytes) throws FaultyResponseException {
+    public void processData(Packet packet) throws FaultyResponseException {
+         Log.info(this, "Process Response " + getResponseType().name());
+         Log.info(this, "CommandCode: " + packet.getCommandCode());  //10
 
-         int next = verifyStartOfRequest(bytes);
-         for(int i = next; i < 26; i++){
-             System.out.println("EXTRA2: " + Integer.toHexString(bytes[i]));
-         }
+         int next = verifyRequestContent(packet.getContent());
+         /*for(int i = next; i < 8; i++){
+             Log.info(this, "Extra Data received: " + Integer.toHexString(packet.getContent()[i]));
+         }*/
+        //Klopt dit??
+        byte[] address2 = Arrays.copyOfRange(packet.getContent(), 6, 12);
 
-        byte[] address2 = Arrays.copyOfRange(bytes, 26, 32);
+        try {
+            Log.info(this, "Received alternate adress: " + new String(address2 ,"UTF-8"));
+            for(byte b : address2){
+                Log.info(this, "Adress part: " + Integer.toHexString(b));
+            }
+        } catch (UnsupportedEncodingException e) {
+            Log.info(this, "Couldn't print alternate adress");
+        }
+
         getEngine().setSecondAddress(address2);
 
-        next = 33;
+        next = 15;
 
-         if(bytes.length > next){
-             for(int i = next; i < bytes.length; i++){
-                 System.out.println("EXTRA2: " + Integer.toHexString(bytes[i]));
+         if(packet.getContent().length > next){
+             for(int i = next; i < packet.getContent().length; i++){
+                 Log.info(this, "Extra Data received: " + Integer.toHexString(packet.getContent()[i]));
              }
          }
 

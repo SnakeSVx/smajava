@@ -38,39 +38,33 @@ public class Engine {
         this.inverter = inverter;
     }
 
-    public Response processRequest(Request request) throws IOException, SmajavaException {
+    public Response processRequest(Request request) throws IOException, SmajavaException, FaultyResponseException {
         if(currentRequest != null) throw new RuntimeException("Already processing a request");
         currentRequest = request;
-        byte[] data = request.dataToSend();
-        if(data != null){
-            inverter.send(request.dataToSend());
+        Packet packet = request.dataToSend();
+        if(packet != null){
+            inverter.send(packet.toBytes());
         }
         Response response = getResponse();
         currentRequest = null;
         return response;
     }
 
-    private Response getResponse() throws IOException, SmajavaException {
-        return getResponse(0);
-    }
-
-    private Response getResponse(int run) throws IOException, SmajavaException {
+    private Response getResponse() throws IOException, SmajavaException, FaultyResponseException {
         Response response = makeResponse(currentRequest.getResponseType());
-        try{
-            ByteResult byteResult = inverter.receive();
-            response.processData(byteResult.getResult());
-        } catch (FaultyResponseException e){
-            if (run > MAX_READ_RETRIES) {
-                throw new SmajavaException("Could not receive expected data from response: "+ response);
-            }
-            response = getResponse(run + 1);
+        ByteResult byteResult = inverter.receive();
+        Packet packet = new Packet(byteResult.getResult());
+        if(packet.isValid()){
+            response.processData(packet);
+        } else {
+            throw new FaultyResponseException("Invalid packet received.");
         }
         return response;
     }
 
-    public void open() throws IOException, SmajavaException {
+    public void open() throws IOException, SmajavaException, FaultyResponseException {
         inverter.openConnection();
-        //INIT
+        //INIT_STEP1
         processRequest(new InitRequest(this));
         processRequest(new InitRequest2(this));
     }
@@ -82,10 +76,10 @@ public class Engine {
     public Request makeRequest(RequestType requestType){
         Request request = null;
         switch (requestType){
-            case INIT:
+            case INIT_STEP1:
                 request = new InitRequest(this);
                 break;
-            case INIT2:
+            case INIT_STEP2:
                 request = new InitRequest2(this);
                 break;
         }
@@ -96,10 +90,10 @@ public class Engine {
     public Response makeResponse(ResponseType responseType){
         Response response = null;
         switch (responseType){
-            case INIT:
+            case INIT_STEP1:
                 response = new InitResponse(this);
                 break;
-            case INIT2:
+            case INIT_STEP2:
                 response = new InitResponse2(this);
                 break;
         }

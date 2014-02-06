@@ -1,10 +1,7 @@
 package be.svx.smajava.commands;
 
 
-import be.svx.smajava.engine.RequestType;
-import be.svx.smajava.engine.ResponseType;
-import be.svx.smajava.engine.Engine;
-import be.svx.smajava.engine.Request;
+import be.svx.smajava.engine.*;
 
 /**
  * Created by Stijn on 5/02/14.
@@ -17,16 +14,16 @@ public class InitRequest extends Request {
 
     @Override
     public RequestType getRequestType() {
-        return RequestType.INIT;
+        return RequestType.INIT_STEP1;
     }
 
     @Override
     public ResponseType getResponseType() {
-        return ResponseType.INIT;
+        return ResponseType.INIT_STEP1;
     }
 
     @Override
-    public byte[] dataToSend() {
+    public Packet dataToSend() {
         return null;
     }
 }
