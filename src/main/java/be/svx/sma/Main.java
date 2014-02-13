@@ -25,8 +25,8 @@ public class Main {
         InverterService inverterService = new InverterService(address, type, pin);
         try{
             inverterService.open();
-            inverterService.sendRequest1();
-            inverterService.sendRequest2();
+            //inverterService.sendRequest1();
+            //inverterService.sendRequest2();
             double signal = -1;
             for(int i = 0; i < 4; i++){
                 signal = inverterService.getSignalStrength();

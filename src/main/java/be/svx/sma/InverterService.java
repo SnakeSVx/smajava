@@ -44,6 +44,11 @@ public class InverterService {
     private byte[] hostAddressBytes = DEFAULT_HOST_ADRESS;
 
 
+    private void printLogPacket(Packet packet, String info){
+        Log.info(this, "FMT \t" + packet.getFormat());
+        Log.debugBytes(this, info + "\t", packet.getPacket());
+    }
+
     public InverterService(String address, String type, String pin){
         this.address = address;
         this.pin = pin;
@@ -70,6 +75,7 @@ public class InverterService {
             if(packet.isValid()){
                 if(packet.isCommand(Packet.LOGIN_REQUEST_COMMAND)){
                     inverterCode = packet.getByte(4);
+                    Log.debugBytes(this, "Inverter code: ", new byte[]{inverterCode});
                     //We have to send the same packet back as reply, but with the source/destination address modified
                     packet.setSource(DEFAULT_HOST_ADRESS);
                     packet.setDestination(addressBytes);
@@ -87,6 +93,7 @@ public class InverterService {
                     hostAddressBytes[4] = packet.getByte(12);
                     hostAddressBytes[5] = packet.getByte(13);
                     lastPacket = true;
+                    Log.debugBytes(this, "Hostadress: ", hostAddressBytes);
                 }
             }
         }while(!lastPacket);
@@ -151,7 +158,7 @@ public class InverterService {
 
     private void send(Packet packet) {
         byte[] data = packet.getPacket();
-        Log.debugBytes(this, "OUT: ", data);
+        printLogPacket(packet, "OUT");
         try {
             outputStream.write(data);
             outputStream.flush();
@@ -178,8 +185,8 @@ public class InverterService {
         try {
             int read = future.get(5000, TimeUnit.MILLISECONDS);
             byte[] data =  Arrays.copyOf(content, read);
-            Log.debugBytes(this, "IN: ", data);
             packet = new Packet(data);
+            printLogPacket(packet, "IN");
         } catch (InterruptedException ex) {
             packet = null;
         } catch (ExecutionException ex) {
