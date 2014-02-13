@@ -1,5 +1,7 @@
 package be.svx.sma.protocol;
 
+import be.geek.smajava.Log;
+
 import java.util.Arrays;
 
 /**

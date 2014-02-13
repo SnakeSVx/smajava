@@ -4,10 +4,11 @@
  */
 package be.geek.smajava;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -15,6 +16,16 @@ import java.util.logging.Logger;
  * @author geek
  */
 public class Log {
+
+    public static void initLogging(){
+        try {
+            InputStream fis =  Log.class.getClassLoader().getResourceAsStream("logging.properties");
+            LogManager.getLogManager().readConfiguration(fis);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
     
     public static void info(Object object, String text) {
         Logger.getLogger(object.getClass().getName()).info(text);
@@ -44,7 +55,7 @@ public class Log {
         for (int i = 0; i < bytes.length; i++) {
             stringBuilder.append(String.format("%02x ", bytes[i]));
         }
-        Log.debug(object, stringBuilder.toString());        
+        Log.info(object, stringBuilder.toString());
     }
 
     public static void error(Object object, String string, Exception ex) {

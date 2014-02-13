@@ -63,41 +63,33 @@ public class InverterService {
         }
         //Retrieve the login packet
         Packet packet = receive();
-        if(packet.isValid() && packet.isCommand(Packet.LOGIN_REQUEST_COMMAND)){
-            inverterCode = packet.getByte(4);
-            //We have to send the same packet back as reply, but with the source/destination address modified
-            packet.setSource(DEFAULT_HOST_ADRESS);
-            packet.setDestination(addressBytes);
-            send(packet);
-        } else {
-            throw new SMAException("We didn't get the Login Request we expected!");
-        }
 
-        packet = receive();
-        if(!(packet.isValid() && packet.isCommand(Packet.LOGIN_PART1_COMMAND))){
-            //Arrays.toString(packet.getContent());
-        //} else {
-            throw new SMAException("We didn't get the Login Response we expected!");
-        }
+        boolean lastPacket = false;
+        do{
+            packet = receive();
+            if(packet.isValid()){
+                if(packet.isCommand(Packet.LOGIN_REQUEST_COMMAND)){
+                    inverterCode = packet.getByte(4);
+                    //We have to send the same packet back as reply, but with the source/destination address modified
+                    packet.setSource(DEFAULT_HOST_ADRESS);
+                    packet.setDestination(addressBytes);
+                    send(packet);
+                }else if(packet.isCommand(Packet.LOGIN_PART1_COMMAND)){
 
-        packet = receive();
-        if(!(packet.isValid() && packet.isCommand(Packet.LOGIN_PART2_COMMAND))){
-            //Arrays.toString(packet.getContent());
-            //} else {
-            throw new SMAException("We didn't get the Login Response 2 we expected!");
-        }
+                }else if(packet.isCommand(Packet.LOGIN_PART2_COMMAND)){
 
-        packet = receive();
-        if(packet.isValid() && packet.isCommand(Packet.LOGIN_PART3_COMMAND)){
-            hostAddressBytes[0] = packet.getByte(8);
-            hostAddressBytes[1] = packet.getByte(9);
-            hostAddressBytes[2] = packet.getByte(10);
-            hostAddressBytes[3] = packet.getByte(11);
-            hostAddressBytes[4] = packet.getByte(12);
-            hostAddressBytes[5] = packet.getByte(13);
-        } else {
-            throw new SMAException("We didn't get the Login Response 2 we expected!");
-        }
+                }else if(packet.isCommand(Packet.LOGIN_PART3_COMMAND)){
+                    hostAddressBytes = new byte[6];
+                    hostAddressBytes[0] = packet.getByte(8);
+                    hostAddressBytes[1] = packet.getByte(9);
+                    hostAddressBytes[2] = packet.getByte(10);
+                    hostAddressBytes[3] = packet.getByte(11);
+                    hostAddressBytes[4] = packet.getByte(12);
+                    hostAddressBytes[5] = packet.getByte(13);
+                    lastPacket = true;
+                }
+            }
+        }while(!lastPacket);
     }
 
     public void sendRequest1(){
@@ -135,8 +127,8 @@ public class InverterService {
         send(packet);
         double reception = 0;
         packet = receive();
-        Log.info(this, "Received packet!");
         if(packet != null && packet.isValid() && packet.isCommand(Packet.RESPONSE_INFORMATION_COMMAND) && packet.getByte(0) == 0x05 && packet.getByte(1) == 0x00){
+            Log.info(this, "Received signal packet!");
             byte strength = packet.getByte(4);
             reception = (strength/256f)*100;
             Log.info(this, Arrays.toString(packet.getPacket()));
@@ -159,7 +151,7 @@ public class InverterService {
 
     private void send(Packet packet) {
         byte[] data = packet.getPacket();
-        Log.debugBytes(this, "Sending data: ", data);
+        Log.debugBytes(this, "OUT: ", data);
         try {
             outputStream.write(data);
             outputStream.flush();
@@ -184,8 +176,10 @@ public class InverterService {
 
         Future<Integer> future = executor.submit(callable);
         try {
-            int read = future.get(15000, TimeUnit.MILLISECONDS);
-            packet = new Packet(Arrays.copyOf(content, read));
+            int read = future.get(5000, TimeUnit.MILLISECONDS);
+            byte[] data =  Arrays.copyOf(content, read);
+            Log.debugBytes(this, "IN: ", data);
+            packet = new Packet(data);
         } catch (InterruptedException ex) {
             packet = null;
         } catch (ExecutionException ex) {

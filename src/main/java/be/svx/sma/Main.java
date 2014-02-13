@@ -16,6 +16,8 @@ public class Main {
      */
     public static void main(String[] args) {
 
+        Log.initLogging();
+
         String address = "008025A66FD7";
         String type = "";
         String pin = "0000";
