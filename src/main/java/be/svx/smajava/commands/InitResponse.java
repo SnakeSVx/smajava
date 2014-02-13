@@ -45,7 +45,7 @@ public class InitResponse extends Response {
 
     /**
      * R 7E 1F 00 61 $ADDR 00 00 00 00 00 00 02 00 00 04 70 00 $END;
-     * E $INVCODE $END;
+     * E $INVCODE $END;   <
      *
      * @param packet the packet received
      * @throws FaultyResponseException

@@ -262,15 +262,17 @@ public class Codec {
                     case POW:
                         data = readStream(received);
                         int gap = 1;
-                        //System.out.printf( "data=%02x\n",data[3] );
-                        if( (data[3]) == 0x08 )
-                            gap = 40; 
-                        if( (data[3]) == 0x10 )
-                            gap = 40; 
-                        if( (data[3]) == 0x40 )
-                            gap = 28;
-                        if( (data[3]) == 0x00 )
-                            gap = 28;
+                        if(data.length > 3){
+                            //System.out.printf( "data=%02x\n",data[3] );
+                            if( (data[3]) == 0x08 )
+                                gap = 40;
+                            if( (data[3]) == 0x10 )
+                                gap = 40;
+                            if( (data[3]) == 0x40 )
+                                gap = 28;
+                            if( (data[3]) == 0x00 )
+                                gap = 28;
+                        }
                         for (int cntr = 0; cntr<data.length; cntr+=gap ) 
                         {
                            long idate=Util.convertToValue(data,cntr+4, 4);

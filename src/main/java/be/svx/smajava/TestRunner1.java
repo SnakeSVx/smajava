@@ -17,6 +17,6 @@ public class TestRunner1 {
 
         be.geek.smajava.Smajava.main(arguments);
         //Thread.sleep(2000);
-        Smajava.main(arguments);
+        //Smajava.main(arguments);
     }
 }

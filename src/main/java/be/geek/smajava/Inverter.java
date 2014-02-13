@@ -3,6 +3,7 @@ package be.geek.smajava;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -111,7 +112,7 @@ public class Inverter {
     }    
     
     public String getConnectionURL() {
-        return URLTemplate.replaceFirst("\\%s", address);
+        return URLTemplate.replaceFirst("%s", address);
     }
 
     public void openConnection() throws IOException {
@@ -137,11 +138,11 @@ public class Inverter {
     
     public ByteResult receive() throws IOException, SmajavaException {
         int read = 1;
-   
-        
+
+
         // header is always 3 bytes
         final byte[] header = new byte[3];
-        
+
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
         Callable<Integer> callable = new Callable<Integer>() {
@@ -151,7 +152,7 @@ public class Inverter {
                 return inputStream.read(header);
             }
         };
-  
+
         Future<Integer> future = executor.submit(callable);
         try {
             read = future.get(5000, TimeUnit.MILLISECONDS);
@@ -166,25 +167,25 @@ public class Inverter {
 
         final int contentlength = (new Byte(header[1])).intValue();
         Log.debug(this, "Content length is " + contentlength + " bytes.");
-        
+
         // construct byte array to receive data in
         final byte[] result = new byte[contentlength];
         result[0] = header[0];
         result[1] = header[1];
         result[2] = header[2];
         Log.debug(this, "Receiving...");
-        
-        
+
+
         executor = Executors.newFixedThreadPool(2);
 
         callable = new Callable<Integer>() {
 
             @Override
             public Integer call() throws Exception {
-                return inputStream.read(result, 3, contentlength - 3);    
+                return inputStream.read(result, 3, contentlength - 3);
             }
         };
-   
+
         future = executor.submit(callable);
         try {
             read = future.get(5000, TimeUnit.MILLISECONDS);
@@ -195,9 +196,9 @@ public class Inverter {
         } catch (TimeoutException ex) {
             throw new SmajavaException(ex.getMessage(), SmajavaException.Type.BLUETOOTH_RESET);
         }
-        
-        //read = inputStream.read(result, 3, contentlength - 3);               
-        read+=3;                
+
+        //read = inputStream.read(result, 3, contentlength - 3);
+        read+=3;
         Log.debug(this, "Read "+read+" bytes.");
         Log.debugBytes(this, "received: ", result);
         ByteResult byteResult = new ByteResult();
