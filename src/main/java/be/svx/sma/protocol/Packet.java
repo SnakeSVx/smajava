@@ -9,8 +9,8 @@ import java.util.Arrays;
  */
 public class Packet {
 
-    public static final String LEVEL1_FORMAT = "7E L1 L2 CS SA SA SA SA SA SA SA DA DA DA DA DA DA CB CB DATA";
-    public static final String LEVEL2_FORMAT = "7E L1 L2 CS SA SA SA SA SA SA SA DA DA DA DA DA DA CB CB 7E FF 03 60 65 L3 DB SN SN SN SN SN SN 00 SB SN SN SN SN SN M1 AK M2 TN M3 C# C1 C2 C3 CB CB DATA(-3 bytes) FC FC 7E";
+    public static final String LEVEL1_FORMAT = "7E L1 L2 CS SA SA SA SA SA SA DA DA DA DA DA DA CB CB DATA";
+    public static final String LEVEL2_FORMAT = "7E L1 L2 CS SA SA SA SA SA SA DA DA DA DA DA DA CB CB 7E FF 03 60 65 L3 DB SN SN SN SN SN SN 00 SB SN SN SN SN SN M1 AK M2 TN M3 C# C1 C2 C3 CB CB DATA(-3 bytes) FC FC 7E";
 
 
     //REQUEST
