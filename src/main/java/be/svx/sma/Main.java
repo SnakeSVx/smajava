@@ -1,9 +1,7 @@
 package be.svx.sma;
 
 import be.geek.smajava.Log;
-import be.svx.sma.protocol.SMAException;
-
-import java.io.IOException;
+import be.svx.sma.core.SMAException;
 
 //These are the requests that should work: https://code.google.com/r/janus44444-sma-bluetooth/source/browse/sma2plus-sb5000tl-session-analysis.log?spec=svn102508ced71b4c8aed5b0fc827d4c649ebb45a25&r=102508ced71b4c8aed5b0fc827d4c649ebb45a25
 /**
@@ -25,12 +23,10 @@ public class Main {
         InverterService inverterService = new InverterService(address, type, pin);
         try{
             inverterService.open();
-            //inverterService.sendRequest1();
-            //inverterService.sendRequest2();
+            inverterService.sendRequest1();
+            inverterService.sendRequest2();
             double signal = -1;
-            for(int i = 0; i < 4; i++){
-                signal = inverterService.getSignalStrength();
-            }
+            signal = inverterService.getSignalStrength();
             Log.info(inverterService, "Signal Strength: " + signal);
         } catch (SMAException e){
             Log.error(inverterService, "Something went wrong during INIT" , e);

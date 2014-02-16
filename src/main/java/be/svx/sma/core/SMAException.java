@@ -1,4 +1,4 @@
-package be.svx.sma.protocol;
+package be.svx.sma.core;
 
 /**
  * Created by Stijn on 7/02/14.

@@ -2,7 +2,7 @@ package be.svx.sma;
 
 import be.geek.smajava.Log;
 import be.svx.sma.protocol.Packet;
-import be.svx.sma.protocol.SMAException;
+import be.svx.sma.core.SMAException;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
@@ -67,7 +67,7 @@ public class InverterService {
             throw new SMAException("Can't open connection", e);
         }
         //Retrieve the login packet
-        Packet packet = receive();
+        Packet packet;
 
         boolean lastPacket = false;
         do{
@@ -135,10 +135,8 @@ public class InverterService {
         double reception = 0;
         packet = receive();
         if(packet != null && packet.isValid() && packet.isCommand(Packet.RESPONSE_INFORMATION_COMMAND) && packet.getByte(0) == 0x05 && packet.getByte(1) == 0x00){
-            Log.info(this, "Received signal packet!");
             byte strength = packet.getByte(4);
-            reception = (strength/256f)*100;
-            Log.info(this, Arrays.toString(packet.getPacket()));
+            reception = ((float)(strength & 0xFF)/(float)0xFF)*100;
         }
         return reception;
     }

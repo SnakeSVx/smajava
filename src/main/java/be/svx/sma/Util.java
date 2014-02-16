@@ -1,15 +1,28 @@
 package be.svx.sma;
 
 import be.geek.smajava.Log;
-import be.svx.sma.protocol.SMAException;
+import be.svx.sma.core.SMAException;
+import be.svx.sma.core.SMAPacket;
 
 import javax.xml.bind.DatatypeConverter;
+import java.util.Arrays;
 import java.util.concurrent.*;
 
 /**
  * Created by Stijn on 7/02/14.
  */
 public class Util {
+
+    public static byte[] removeEscapeBytes(byte[] data){
+        byte[] newData = new byte[data.length];
+        int i = 0;
+        for(byte b: data){
+            if(b != 0x7D){
+                newData[i++] = b;
+            }
+        }
+        return Arrays.copyOf(newData, i);
+    }
 
     public static byte[] convertAddressToBytes(String address){
         String[] codes = address.split("(?<=\\G..)");
@@ -74,5 +87,10 @@ public class Util {
             }
         }
         return received;
+    }
+
+    public static void printLogPacket(SMAPacket packet, String info){
+        Log.info(packet, "FMT \t" + packet.getPacketFormat());
+        Log.debugBytes(packet, info + "\t", packet.getData());
     }
 }

@@ -1,5 +1,8 @@
 package be.svx;
 
+import be.geek.smajava.Log;
+import be.svx.sma.Util;
+import be.svx.sma.core.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -14,7 +17,7 @@ import java.util.Vector;
  * Created by Stijn on 13/02/14.
  */
 @RunWith(JUnit4.class)
-public class DiscoveryTest implements DiscoveryListener {
+public class DiscoveryTest implements DiscoveryListener, MessageHandler {
 
     //object used for waiting
     private static Object lock=new Object();
@@ -58,33 +61,16 @@ public class DiscoveryTest implements DiscoveryListener {
         System.out.println("Address: "+remoteDevice.getBluetoothAddress());
         System.out.println("Name: "+remoteDevice.getFriendlyName(false));
 
+        String deviceName = remoteDevice.getFriendlyName(false);
+        String SN = deviceName.substring(deviceName.length() - 12);
+        System.out.println("Serial: " + SN.substring(2));
+        Log.debugBytes(this, "Serial in bytes: ", Util.convertAddressToBytes(SN.substring(2)));
 
-        StreamConnection connection = (StreamConnection) Connector.open("btspp://" + remoteDevice.getBluetoothAddress() + ":1;authenticate=false;encrypt=false;master=false");
-
-        remoteDevice = RemoteDevice.getRemoteDevice(connection);
-
-        System.out.println("Address: "+remoteDevice.getBluetoothAddress());
-        System.out.println("Name: "+remoteDevice.getFriendlyName(false));
-
-       /* UUID[] uuidSet = new UUID[1];
-       // uuidSet[0]=new UUID("4e3aea40e2a511e095720800200c9a66", false);
-
-        System.out.println("\nSearching for service...");
-        agent.searchServices(null,uuidSet,remoteDevice,client);
-
-        try {
-            synchronized(lock){
-                lock.wait();
-            }
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        if(connectionURL==null){
-            System.out.println("Device does not support Simple SPP Service.");
-            System.exit(0);
-        } */
+        MessagingService service = new MessagingService(localDevice, remoteDevice);
+        service.addEventHandler(this);
+        service.open();
+        service.doRequest(new SignalStrengthRequest(service.getRemoteAddress()));
+        service.close();
     }
 
     @Override
@@ -126,6 +112,17 @@ public class DiscoveryTest implements DiscoveryListener {
         System.out.println("Inquiry Discovered!");
         synchronized(lock){
             lock.notify();
+        }
+    }
+
+    @Override
+    public void processReponse(Response response) {
+        if(response instanceof Login3Response){
+            System.out.println("Initialization successfull");
+        } else if(response instanceof SignalStrengthResponse){
+            System.out.println("Signal Strength: "  + ((SignalStrengthResponse)response).getSignalStrength());
+        } else {
+            System.out.println("Got Event: " + response.getClass());
         }
     }
 }

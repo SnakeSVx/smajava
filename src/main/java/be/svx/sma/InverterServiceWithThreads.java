@@ -3,7 +3,7 @@ package be.svx.sma;
 import be.geek.smajava.Log;
 import be.svx.sma.protocol.Packet;
 import be.svx.sma.protocol.PacketLevel;
-import be.svx.sma.protocol.SMAException;
+import be.svx.sma.core.SMAException;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
