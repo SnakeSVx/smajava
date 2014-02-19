@@ -1,15 +1,13 @@
 package be.svx;
 
-import be.geek.smajava.Log;
-import be.svx.sma.Util;
+import be.svx.sma.util.Log;
+import be.svx.sma.util.Util;
 import be.svx.sma.core.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import javax.bluetooth.*;
-import javax.microedition.io.Connector;
-import javax.microedition.io.StreamConnection;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -25,10 +23,9 @@ public class DiscoveryTest implements DiscoveryListener, MessageHandler {
     //vector containing the devices discovered
     private static Vector vecDevices=new Vector();
 
-    private static String connectionURL=null;
-
     @Test
     public void testDisovery() throws IOException {
+        Log.initLogging();
 
         DiscoveryTest client = new DiscoveryTest();
 
@@ -66,9 +63,14 @@ public class DiscoveryTest implements DiscoveryListener, MessageHandler {
         System.out.println("Serial: " + SN.substring(2));
         Log.debugBytes(this, "Serial in bytes: ", Util.convertAddressToBytes(SN.substring(2)));
 
-        MessagingService service = new MessagingService(localDevice, remoteDevice);
+        MessagingService service = new MessagingService(localDevice, remoteDevice, false);
         service.addEventHandler(this);
         service.open();
+        Log.info(this, "Sending basic 1 request");
+        service.doRequest(new Basic1Request(service.getRemoteAddress()));
+        Log.info(this, "Sending basic 2 request");
+        service.doRequest(new Basic2Request(service.getRemoteAddress()));
+        Log.info(this, "Sending signal strength request");
         service.doRequest(new SignalStrengthRequest(service.getRemoteAddress()));
         service.close();
     }
@@ -84,26 +86,12 @@ public class DiscoveryTest implements DiscoveryListener, MessageHandler {
 
     @Override
     public void servicesDiscovered(int transID, ServiceRecord[] servRecord) {
-        //TODO not used!!!
-        System.out.println("Service Discovered!");
-        System.out.println(servRecord[0].getConnectionURL(ServiceRecord.NOAUTHENTICATE_NOENCRYPT, false));
-        System.out.println(servRecord[0].getConnectionURL(ServiceRecord.AUTHENTICATE_NOENCRYPT, false));
-        System.out.println(servRecord[0].getConnectionURL(ServiceRecord.AUTHENTICATE_ENCRYPT, false));
-        if(servRecord!=null && servRecord.length>0){
-            connectionURL=servRecord[0].getConnectionURL(ServiceRecord.AUTHENTICATE_ENCRYPT,false);
-        }
-        synchronized(lock){
-            lock.notify();
-        }
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void serviceSearchCompleted(int transID, int respCode) {
-        //TODO not used!!
-        System.out.println("Service Seearch Completed!");
-        synchronized(lock){
-            lock.notify();
-        }
+        throw new UnsupportedOperationException();
     }
 
     @Override

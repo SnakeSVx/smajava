@@ -4,6 +4,8 @@
  */
 package be.geek.smajava;
 
+import be.svx.sma.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,7 +105,7 @@ public class ReturnType {
             }
         }        
         bufferedReader.close();
-        Log.debug(ReturnType.class, "Found "+result.size());
+        Log.debug(ReturnType.class, "Found " + result.size());
         return result;
         
     }    

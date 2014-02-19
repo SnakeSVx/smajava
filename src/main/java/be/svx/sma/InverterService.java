@@ -1,8 +1,9 @@
 package be.svx.sma;
 
-import be.geek.smajava.Log;
 import be.svx.sma.protocol.Packet;
 import be.svx.sma.core.SMAException;
+import be.svx.sma.util.Log;
+import be.svx.sma.util.Util;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;

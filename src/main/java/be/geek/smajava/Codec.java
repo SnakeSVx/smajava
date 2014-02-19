@@ -1,6 +1,8 @@
 package be.geek.smajava;
 
-import java.io.BufferedReader;
+import be.svx.sma.util.FCS;
+import be.svx.sma.util.Log;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Calendar;

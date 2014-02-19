@@ -1,8 +1,6 @@
 package be.svx.sma.core;
 
-import be.geek.smajava.Log;
-import be.svx.sma.Util;
-import com.sun.corba.se.spi.activation._RepositoryImplBase;
+import be.svx.sma.util.Util;
 
 import javax.bluetooth.LocalDevice;
 import javax.bluetooth.RemoteDevice;
@@ -48,7 +46,7 @@ public class MessagingService {
 
     private List<MessageHandler> messageHandlers;
 
-    public MessagingService(LocalDevice localDevice, RemoteDevice remoteDevice) {
+    public MessagingService(LocalDevice localDevice, RemoteDevice remoteDevice, boolean async) {
         requestList = new ArrayList<Request>();
         expectedResponses = new ArrayList<Class<? extends Response>>();
         messageHandlers = new ArrayList<MessageHandler>();

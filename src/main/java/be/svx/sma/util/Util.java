@@ -1,8 +1,8 @@
-package be.svx.sma;
+package be.svx.sma.util;
 
-import be.geek.smajava.Log;
 import be.svx.sma.core.SMAException;
 import be.svx.sma.core.SMAPacket;
+import be.svx.sma.util.Log;
 
 import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;

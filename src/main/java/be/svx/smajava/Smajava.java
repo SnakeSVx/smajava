@@ -2,7 +2,7 @@ package be.svx.smajava;
 
 import be.geek.smajava.Configuration;
 import be.geek.smajava.Inverter;
-import be.geek.smajava.Log;
+import be.svx.sma.util.Log;
 import be.geek.smajava.SmajavaException;
 import be.svx.smajava.engine.Engine;
 import be.svx.smajava.engine.FaultyResponseException;

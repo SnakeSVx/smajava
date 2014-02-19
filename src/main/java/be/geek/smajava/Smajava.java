@@ -4,6 +4,8 @@
  */
 package be.geek.smajava;
 
+import be.svx.sma.util.Log;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

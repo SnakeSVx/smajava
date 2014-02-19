@@ -1,5 +1,7 @@
 package be.geek.smajava;
 
+import be.svx.sma.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,7 +64,7 @@ public class Engine {
                 bufferedReader.mark(2048);
                 resettedline = linecntr;
             }    
-            Log.info(this, "line: "+linecntr);
+            Log.info(this, "line: " + linecntr);
         }
         Log.info(this, "The End");
         bufferedReader.close();

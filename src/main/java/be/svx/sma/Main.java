@@ -1,7 +1,7 @@
 package be.svx.sma;
 
-import be.geek.smajava.Log;
 import be.svx.sma.core.SMAException;
+import be.svx.sma.util.Log;
 
 //These are the requests that should work: https://code.google.com/r/janus44444-sma-bluetooth/source/browse/sma2plus-sb5000tl-session-analysis.log?spec=svn102508ced71b4c8aed5b0fc827d4c649ebb45a25&r=102508ced71b4c8aed5b0fc827d4c649ebb45a25
 /**

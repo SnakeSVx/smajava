@@ -1,6 +1,6 @@
 package be.svx.smajava.commands;
 
-import be.geek.smajava.Log;
+import be.svx.sma.util.Log;
 import be.svx.smajava.engine.*;
 
 /**

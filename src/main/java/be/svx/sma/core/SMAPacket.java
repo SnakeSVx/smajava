@@ -1,6 +1,6 @@
 package be.svx.sma.core;
 
-import be.svx.sma.Util;
+import be.svx.sma.util.Util;
 
 /**
  * Created by Stijn on 16/02/14.
@@ -177,11 +177,19 @@ public abstract class SMAPacket implements Packet {
                     case 0x05:
                         packet = new SignalStrengthResponse(data);
                         break;
+                    case 0x01:
+                        packet = new Basic1Response(data);
+                        break;
+                    case 0x02:
+                        packet = new Basic2Response(data);
+                        break;
                     default:
+                        packet = new UnknownResponse(data);
                         break;
                 }
                 break;
             default:
+                packet = new UnknownResponse(data);
                 break;
         }
         return packet;
